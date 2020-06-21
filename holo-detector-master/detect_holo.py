@@ -7,13 +7,24 @@ import holo_detector
 import utils
 import scipy.stats
 from matplotlib import pyplot as plt
-
+from flask import Flask,jsonify,request
 logger = logging.getLogger()
+app = Flask(__name__)
 
 
+@app.route('/',methods = ['POST'])
 def main():
-    infile = 'data/video1.mp4'
+    
+    video = request.files['file'].read()
+    
+    with open('2.mp4','wb') as f:
+        f.write(video)
+        
+        
+    infile = '2.mp4'
     outfile = 'out.mp4'
+    
+    
     w, h = 1080, 640
     rotate = False
     cap = cv2.VideoCapture(infile)
@@ -51,7 +62,7 @@ def main():
     out.release()
     cap.release()
     cv2.destroyAllWindows()
-
+    return jsonify({'msg':'done'})
 
 if __name__ == '__main__':
-    main()
+    app.run(debug=True)
